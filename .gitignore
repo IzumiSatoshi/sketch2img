@@ -1,2 +1,4 @@
 data/
 model/
+flagged/
+__pycache__/

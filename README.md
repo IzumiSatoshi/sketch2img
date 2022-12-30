@@ -1,1 +1,1 @@
-# sketch2img-diffusion
+# sketch2img with diffusion models
