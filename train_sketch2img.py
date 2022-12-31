@@ -106,6 +106,7 @@ if __name__ == "__main__":
 
         print(f"{e + 1} epoch : {loss.item()}")
 
+    # shouldn't use DDPM scheduler for saved pipeline
     pipe = Sketch2ImgPipeline(unet=model, scheduler=scheduler)
     pipe.save_pretrained(save_path)
 
