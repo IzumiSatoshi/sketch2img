@@ -2,17 +2,15 @@ import gradio as gr
 from Sketch2ImgPipeline import Sketch2ImgPipeline
 import numpy as np
 
-pipe = Sketch2ImgPipeline.from_pretrained("IzumiSatoshi/sketch2img-FashionMNIST")
+pipe = Sketch2ImgPipeline.from_pretrained("model/from_init_test.pth")
 
 
 def greet(input_img):
     sketches = np.expand_dims(input_img, (0, 1))
     sketches[sketches < 250] = 0
     sketches[sketches >= 250] = 255
-    print(sketches.shape)
-    samples = pipe(sketches, num_inference_step=10)
+    samples = pipe(sketches, num_inference_step=1000)
     out = samples[0][0]
-    print(out.shape)
     return sketches[0][0], out
 
 
