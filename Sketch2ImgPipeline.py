@@ -32,8 +32,8 @@ class Sketch2ImgPipeline(DiffusionPipeline):
 
         for t in tqdm(self.scheduler.timesteps):
             x = torch.concat([samples, sketches], dim=1).to(self.device)
-            residuals = self.unet(x, t).sample
-            samples = self.scheduler.step(residuals, t, samples).prev_sample
+            model_output = self.unet(x, t).sample
+            samples = self.scheduler.step(model_output, t, samples).prev_sample
 
         # samples = self.denormalize(samples).cpu().int().numpy()
         samples = samples.cpu().numpy()
