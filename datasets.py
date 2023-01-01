@@ -4,7 +4,7 @@ import cv2
 import pathlib
 
 
-class FineTuningDataset(torch.utils.data.Dataset):
+class CelebaDataset(torch.utils.data.Dataset):
     def __init__(self, data_dir):
         super().__init__()
 

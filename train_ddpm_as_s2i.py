@@ -76,3 +76,6 @@ def train(dataset):
             wandb.log({"loss": loss.item()})
     # save
     pipe.save_pretrained(save_path)
+
+    # finish wandb
+    wandb.finish()
