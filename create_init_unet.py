@@ -16,6 +16,9 @@ import copy
 
 
 def create_init_sketch2img_pipe(pipe, save_pipe_path, add_channels_num):
+    # currently this method is not creating sketch2img pipeline.
+    # just replacing unet
+    # TODO: implement this as Sketch2Img pipline's class method
 
     unet_class = pipe.config["unet"][1]
 
