@@ -23,7 +23,7 @@ def create_init_sketch2img_pipe(pipe, save_pipe_path, add_channels_num):
     unet_class = pipe.config["unet"][1]
 
     # modify conv_in.weight
-    state_dict = pipe.unet.state_dcict()
+    state_dict = pipe.unet.state_dict()
     base_weight = state_dict["conv_in.weight"]
     s = base_weight.shape
     zero_weight = torch.zeros((s[0], add_channels_num, s[2], s[3]))
