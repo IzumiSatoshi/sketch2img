@@ -1,8 +1,9 @@
 import gradio as gr
-from Sketch2ImgPipeline import Sketch2ImgPipeline
+from pipeline_ddpm_sketch2img import DDPMSketch2ImgPipeline
 import numpy as np
+from diffusers import DDPMScheduler, DPMSolverMultistepScheduler, DDIMScheduler
 
-pipe = Sketch2ImgPipeline.from_pretrained("model/from_init_test.pth")
+pipe = DDPMSketch2ImgPipeline.from_pretrained("model/from_init_test").to("cuda")
 
 
 def greet(input_img):
