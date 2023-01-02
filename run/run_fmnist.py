@@ -1,6 +1,6 @@
 import sys
 
-sys.path.append(".")
+sys.path.append(".")  # couldn't import without this
 from sketch2img_datasets import FashionMNISTDataset
 from ddpm_sketch2img_trainer import Trainer
 

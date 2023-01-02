@@ -71,6 +71,9 @@ class Trainer:
         print("trained model will save at : ", save_path)
         print("dataset length :", len(dataset))
 
+        print("saving initial model...")
+        self.pipe.save_pretrained(save_path)  # make sure save is successful
+
     def log_sample(self, sketch):
         assert type(sketch) == torch.Tensor
         assert len(sketch.shape) == 4, "sketch's shape == (bs, c, h, w)"
