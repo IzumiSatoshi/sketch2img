@@ -66,6 +66,11 @@ class Trainer:
             },
         )
 
+        # initial prints
+        print("base model : ", pretrained_model_name_or_path)
+        print("trained model will save at : ", save_path)
+        print("dataset length :", len(dataset))
+
     def log_sample(self, sketch):
         assert type(sketch) == torch.Tensor
         assert len(sketch.shape) == 4, "sketch's shape == (bs, c, h, w)"
@@ -150,3 +155,7 @@ class Trainer:
                     },
                     step=self.global_step,
                 )
+
+            # save every epoch
+            print("saving model...")
+            self.pipe.save_pretrained(self.save_path)
