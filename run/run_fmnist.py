@@ -1,21 +1,22 @@
 import sys
+import random
 
-sys.path.append(".")  # couldn't import without this
+sys.path.append(".")  # couldn't import in local without this
 from sketch2img_datasets import FashionMNISTDataset
 from ddpm_sketch2img_trainer import Trainer
 
 project_name = "ddpm_train_test"
-run_name = "fm_trainer_test1"
-data_dir = "../data/FashionMNIST"
-pretrained_model_path = "../model/init_s2i_fmnist_5epochs"
-save_path = "../model/" + run_name
+run_name = "s2i_fmnist_10epoch" + "_" + str(random.randint(0, 1000))
+data_dir = "data/FashionMNIST"
+pretrained_model_path = "model/init_s2i_fmnist_5epochs"
+save_path = "model/" + run_name
 
-train_dataset_rate = 0.001
-image_log_steps = 10
-num_epochs = 4
-batch_size = 2
+train_dataset_rate = 1
+image_log_steps = 100
+num_epochs = 10
+batch_size = 128
 lr = 1e-5
-grad_accumulation_steps = 2
+grad_accumulation_steps = 5
 
 dataset = FashionMNISTDataset(data_dir)
 trainer = Trainer(

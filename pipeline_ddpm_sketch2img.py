@@ -11,7 +11,6 @@ class DDPMSketch2ImgPipeline(DiffusionPipeline):
         super().__init__()
         self.register_modules(unet=unet, scheduler=scheduler)
 
-    @torch.no_grad()
     def __call__(self, sketch, num_inference_step=1000):
         # sketch : PIL
         # returl : PIL
@@ -42,7 +41,8 @@ class DDPMSketch2ImgPipeline(DiffusionPipeline):
             model_input = torch.concat([image, transformed_sketch], dim=1).to(
                 self.device
             )
-            model_output = self.unet(model_input, t).sample
+            with torch.no_grad():
+                model_output = self.unet(model_input, t).sample
             image = self.scheduler.step(model_output, t, image).prev_sample
 
         return image

@@ -80,14 +80,14 @@ class Trainer:
 
         sketch = sketch[0].unsqueeze(0)  # only use first sketch
 
-        image = self.pipe.sample(sketch, self.scheduler.num_train_timesteps)
+        image = self.pipe.sample(sketch, self.pipe.scheduler.num_train_timesteps)
 
         # to pil
         image = image.squeeze(0)
-        image = self.denormalize(image).cpu().to(torch.uint8)
+        image = self.pipe.denormalize(image).cpu().to(torch.uint8)
         image = transforms.functional.to_pil_image(image)
         sketch = sketch.squeeze(0)
-        sketch = self.denormalize(sketch).cpu().to(torch.uint8)
+        sketch = self.pipe.denormalize(sketch).cpu().to(torch.uint8)
         sketch = transforms.functional.to_pil_image(sketch)
 
         self.run.log(
@@ -114,7 +114,7 @@ class Trainer:
         self.optimizer.zero_grad()
 
         for epoch in tqdm(range(self.num_epochs), desc="epoch"):
-            for step, (image, sketch) in enumerate(tqdm(self.dataloader), desc="step"):
+            for step, (image, sketch) in enumerate(tqdm(self.dataloader, desc="step")):
                 self.global_step += 1
 
                 bs = image.shape[0]
@@ -160,5 +160,4 @@ class Trainer:
                 )
 
             # save every epoch
-            print("saving model...")
             self.pipe.save_pretrained(self.save_path)
