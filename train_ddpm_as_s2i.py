@@ -16,6 +16,8 @@ def train(dataset):
     grad_accumulation_steps = 2
     train_dataset_rate = 0.1
     device = "cuda"
+    wandb_project_name = "ddpm_train_test"
+    wandb_run_name = None
 
     # wandb initizalize
     config = dict(
@@ -26,7 +28,7 @@ def train(dataset):
         device=device,
         train_dataset_rate=train_dataset_rate,
     )
-    wandb.init(project="ddpm_train_test", config=config)
+    wandb.init(project="ddpm_train_test", name=wandb_run_name, config=config)
 
     # load pipe
     pipe = DDPMPipeline.from_pretrained(
