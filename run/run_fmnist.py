@@ -1,3 +1,6 @@
+import sys
+
+sys.path.append(".")
 from sketch2img_datasets import FashionMNISTDataset
 from ddpm_sketch2img_trainer import Trainer
 
