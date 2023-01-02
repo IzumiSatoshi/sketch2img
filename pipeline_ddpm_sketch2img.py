@@ -11,7 +11,7 @@ class DDPMSketch2ImgPipeline(DiffusionPipeline):
         super().__init__()
         self.register_modules(unet=unet, scheduler=scheduler)
 
-    def __call__(self, sketch, num_inference_step=1000):
+    def __call__(self, sketch, num_inference_step=1000, tqdm_leave=True):
         # sketch : PIL
         # returl : PIL
 
@@ -19,7 +19,7 @@ class DDPMSketch2ImgPipeline(DiffusionPipeline):
         sketch = self.normalize(sketch).to(self.device)
         sketch = sketch.unsqueeze(0)
 
-        image = self.sample(sketch, num_inference_step)
+        image = self.sample(sketch, num_inference_step, tqdm_leave)
 
         image = image.squeeze(0)
         image = self.denormalize(image).cpu().to(torch.uint8)
@@ -27,7 +27,7 @@ class DDPMSketch2ImgPipeline(DiffusionPipeline):
         image = transforms.functional.to_pil_image(image)
         return image
 
-    def sample(self, transformed_sketch, num_inference_step):
+    def sample(self, transformed_sketch, num_inference_step, tqdm_leave=True):
         # Is this the right place to set timesteps?
         self.scheduler.set_timesteps(num_inference_step, device=self.device)
 
@@ -37,7 +37,7 @@ class DDPMSketch2ImgPipeline(DiffusionPipeline):
             self.device
         )
 
-        for t in tqdm(self.scheduler.timesteps):
+        for t in tqdm(self.scheduler.timesteps, leave=tqdm_leave):
             model_input = torch.concat([image, transformed_sketch], dim=1).to(
                 self.device
             )

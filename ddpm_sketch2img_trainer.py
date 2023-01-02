@@ -80,7 +80,9 @@ class Trainer:
 
         sketch = sketch[0].unsqueeze(0)  # only use first sketch
 
-        image = self.pipe.sample(sketch, self.pipe.scheduler.num_train_timesteps)
+        image = self.pipe.sample(
+            sketch, self.pipe.scheduler.num_train_timesteps, tqdm_leave=False
+        )
 
         # to pil
         image = image.squeeze(0)
@@ -114,7 +116,9 @@ class Trainer:
         self.optimizer.zero_grad()
 
         for epoch in tqdm(range(self.num_epochs), desc="epoch"):
-            for step, (image, sketch) in enumerate(tqdm(self.dataloader, desc="step")):
+            for step, (image, sketch) in enumerate(
+                tqdm(self.dataloader, desc="step", leave=False)
+            ):
                 self.global_step += 1
 
                 bs = image.shape[0]
