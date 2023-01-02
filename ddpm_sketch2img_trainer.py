@@ -1,6 +1,7 @@
 import torch
 import torch.nn.functional as F
 from torch.utils.data import DataLoader
+from torchvision import transforms
 
 import wandb
 from pipeline_ddpm_sketch2img import DDPMSketch2ImgPipeline
@@ -20,6 +21,7 @@ class Trainer:
         train_dataset_rate,
         project_name,
         run_name,
+        image_log_steps,
         device="cuda",
     ):
         self.save_path = save_path
@@ -28,7 +30,9 @@ class Trainer:
         self.lr = lr
         self.grad_accumulation_steps = grad_accumulation_steps
         self.train_dataset_rate = train_dataset_rate
+        self.image_log_steps = image_log_steps
         self.device = device
+        self.global_step = 0
 
         # split dataset
         dataset_len = int(len(dataset) * train_dataset_rate)
@@ -63,15 +67,48 @@ class Trainer:
         )
 
     def log_sample(self, sketch):
+        assert type(sketch) == torch.Tensor
+        assert len(sketch.shape) == 4, "sketch's shape == (bs, c, h, w)"
+
+        sketch = sketch[0].unsqueeze(0)  # only use first sketch
+
         image = self.pipe.sample(sketch, self.scheduler.num_train_timesteps)
-        self.run.log()
+
+        # to pil
+        image = image.squeeze(0)
+        image = self.denormalize(image).cpu().to(torch.uint8)
+        image = transforms.functional.to_pil_image(image)
+        sketch = sketch.squeeze(0)
+        sketch = self.denormalize(sketch).cpu().to(torch.uint8)
+        sketch = transforms.functional.to_pil_image(sketch)
+
+        self.run.log(
+            {"sketch": wandb.Image(sketch), "generated image": wandb.Image(image)},
+            step=self.global_step,
+        )
+
+        return image
+
+    def calc_weight_abs_avg(self):
+        sketch_channels_num = (
+            self.pipe.unet.config["in_channels"] - self.pipe.unet.config["out_channels"]
+        )
+
+        # Get weight corresponding to sketch channels
+        weight = self.pipe.unet.conv_in.weight[:, -sketch_channels_num:]
+
+        weight_abs = torch.abs(weight)
+        weight_abs_avg = weight_abs.mean().item()
+
+        return weight_abs_avg
 
     def train(self):
         self.optimizer.zero_grad()
 
-        for epoch in range(self.num_epochs):
-            print(epoch)
-            for step, (image, sketch) in enumerate(tqdm(self.dataloader)):
+        for epoch in tqdm(range(self.num_epochs), desc="epoch"):
+            for step, (image, sketch) in enumerate(tqdm(self.dataloader), desc="step"):
+                self.global_step += 1
+
                 bs = image.shape[0]
 
                 image = image.to(self.device)
@@ -100,4 +137,16 @@ class Trainer:
                     self.optimizer.zero_grad()
 
                 # logging
-                self.run.log({"loss": loss.item()})
+                weight_abs_avg = self.calc_weight_abs_avg()
+
+                if self.global_step % self.image_log_steps == 0:
+                    self.log_sample(sketch)
+
+                self.run.log(
+                    {
+                        "weight_abs_avg": weight_abs_avg,
+                        "loss": loss.item(),
+                        "epoch": epoch,
+                    },
+                    step=self.global_step,
+                )
