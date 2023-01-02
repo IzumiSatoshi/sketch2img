@@ -46,7 +46,7 @@ class Trainer:
             pretrained_model_name_or_path
         ).to(device)
 
-        self.optimizer = torch.optim.AdamW(
+        self.optimizer = torch.optim.Adam(
             self.pipe.unet.parameters(),
             lr=lr,
         )
