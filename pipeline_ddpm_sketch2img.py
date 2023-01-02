@@ -22,9 +22,9 @@ class DDPMSketch2ImgPipeline(DiffusionPipeline):
         image = self.sample(sketch, num_inference_step, tqdm_leave)
 
         image = image.squeeze(0)
-        image = self.denormalize(image).cpu().to(torch.uint8)
+        image = self.denormalize(image)
+        image = self.denormalized_tensor_to_pil(image)
 
-        image = transforms.functional.to_pil_image(image)
         return image
 
     def sample(self, transformed_sketch, num_inference_step, tqdm_leave=True):
@@ -46,6 +46,13 @@ class DDPMSketch2ImgPipeline(DiffusionPipeline):
             image = self.scheduler.step(model_output, t, image).prev_sample
 
         return image
+
+    def denormalized_tensor_to_pil(self, tensor):
+        assert len(tensor.shape) == 4, "bs, c, h, w"
+
+        tensor = tensor.cpu().clip(0, 255).to(torch.uint8)
+        pil = transforms.functional.to_pil_image(tensor)
+        return pil
 
     def normalize(self, x):
         assert x.dtype == torch.float
