@@ -2,10 +2,11 @@ import torch
 import torch.nn.functional as F
 from torch.utils.data import DataLoader
 from torchvision import transforms
+from tqdm import tqdm
 
+from PIL import Image
 import wandb
 from pipeline_ddpm_sketch2img import DDPMSketch2ImgPipeline
-from tqdm import tqdm
 
 
 class Trainer:
@@ -92,8 +93,15 @@ class Trainer:
         sketch = self.pipe.denormalize(sketch)
         sketch = self.pipe.denormalized_tensor_to_pil(sketch)
 
+        def get_concat(im1, im2):
+            dst = Image.new("RGB", (im1.width + im2.width, im1.height))
+            dst.paste(im1, (0, 0))
+            dst.paste(im2, (im1.width, 0))
+            return dst
+
+        log_image = get_concat(sketch, image)
         self.run.log(
-            {"sketch": wandb.Image(sketch), "generated image": wandb.Image(image)},
+            {"result": wandb.Image(log_image)},
             step=self.global_step,
         )
 
