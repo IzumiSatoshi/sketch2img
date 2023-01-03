@@ -1,22 +1,33 @@
+import numpy as np
+import torch
 import sys
+
+sys.path.append("src")
+
+from datasets_sketch2img import FashionMNISTDataset
+from trainer_ddpm_sketch2img import Trainer
+
 import random
+import shutil
 
-sys.path.append(".")  # couldn't import in local without this
-from src.datasets_sketch2img import FashionMNISTDataset
-from src.trainer_ddpm_sketch2img import Trainer
 
-project_name = "ddpm_train_test"
-run_name = "s2i_fmnist_30epoch_lr-3" + "_" + str(random.randint(0, 1000))
+project_name = "test"
+run_name = "trainer_test" + "_" + str(random.randint(0, 100000))
 data_dir = "data/FashionMNIST"
 pretrained_model_path = "model/init_s2i_fmnist_5epochs"
 save_path = "model/" + run_name
 
-train_dataset_rate = 1
-image_log_steps = 400
-num_epochs = 30
-batch_size = 128
+train_dataset_rate = 0.0001
+image_log_steps = 5
+num_epochs = 2
+batch_size = 2
 grad_accumulation_steps = 1
 lr = 1e-3
+
+seed = 0
+random.seed(seed)
+np.random.seed(seed)
+torch.manual_seed(seed)
 
 dataset = FashionMNISTDataset(data_dir)
 trainer = Trainer(
@@ -34,3 +45,5 @@ trainer = Trainer(
 )
 
 trainer.train()
+
+shutil.rmtree(save_path)
