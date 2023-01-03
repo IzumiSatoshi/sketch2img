@@ -86,11 +86,11 @@ class Trainer:
 
         # to pil
         image = image.squeeze(0)
-        image = self.pipe.denormalize(image).cpu().to(torch.uint8)
-        image = transforms.functional.to_pil_image(image)
+        image = self.pipe.denormalize(image)
+        image = self.pipe.denormalized_tensor_to_pil(image)
         sketch = sketch.squeeze(0)
-        sketch = self.pipe.denormalize(sketch).cpu().to(torch.uint8)
-        sketch = transforms.functional.to_pil_image(sketch)
+        sketch = self.pipe.denormalize(sketch)
+        sketch = self.pipe.denormalized_tensor_to_pil(sketch)
 
         self.run.log(
             {"sketch": wandb.Image(sketch), "generated image": wandb.Image(image)},
