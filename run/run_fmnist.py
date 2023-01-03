@@ -2,8 +2,8 @@ import sys
 import random
 
 sys.path.append(".")  # couldn't import in local without this
-from sketch2img_datasets import FashionMNISTDataset
-from ddpm_sketch2img_trainer import Trainer
+from src.sketch2img_datasets import FashionMNISTDataset
+from src.ddpm_sketch2img_trainer import Trainer
 
 project_name = "ddpm_train_test"
 run_name = "s2i_fmnist_30epoch_lr-3" + "_" + str(random.randint(0, 1000))

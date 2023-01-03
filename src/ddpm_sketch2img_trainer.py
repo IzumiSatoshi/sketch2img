@@ -4,7 +4,7 @@ from torch.utils.data import DataLoader
 from torchvision import transforms
 
 import wandb
-from pipeline_ddpm_sketch2img import DDPMSketch2ImgPipeline
+from src.pipeline_ddpm_sketch2img import DDPMSketch2ImgPipeline
 from tqdm import tqdm
 
 

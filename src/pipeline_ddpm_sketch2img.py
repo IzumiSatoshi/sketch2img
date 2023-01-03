@@ -28,6 +28,10 @@ class DDPMSketch2ImgPipeline(DiffusionPipeline):
         return image
 
     def sample(self, transformed_sketch, num_inference_step, tqdm_leave=True):
+        assert (
+            len(transformed_sketch.shape) == 4
+        ), f"(bs, c, h, w) but {transformed_sketch.shape}"
+
         # Is this the right place to set timesteps?
         self.scheduler.set_timesteps(num_inference_step, device=self.device)
 
@@ -48,7 +52,7 @@ class DDPMSketch2ImgPipeline(DiffusionPipeline):
         return image
 
     def denormalized_tensor_to_pil(self, tensor):
-        assert len(tensor.shape) == 4, "bs, c, h, w"
+        assert len(tensor.shape) == 3, f"(c, h, w) but {tensor.shape}"
 
         tensor = tensor.cpu().clip(0, 255).to(torch.uint8)
         pil = transforms.functional.to_pil_image(tensor)

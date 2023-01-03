@@ -1,5 +1,5 @@
 import gradio as gr
-from pipeline_ddpm_sketch2img import DDPMSketch2ImgPipeline
+from src.pipeline_ddpm_sketch2img import DDPMSketch2ImgPipeline
 import numpy as np
 from diffusers import DDPMScheduler, DPMSolverMultistepScheduler, DDIMScheduler
 from PIL import Image
