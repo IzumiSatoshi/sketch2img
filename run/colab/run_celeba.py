@@ -7,7 +7,7 @@ from trainer_ddpm_sketch2img import Trainer
 
 project_name = "sketch2img_celeba_ddpm"
 run_name = "1epoch" + "_" + str(random.randint(0, 1000))
-data_dir = "../data2/celeba_hq_256"
+data_dir = "/content/download/celeba_hq_256"
 pretrained_model_path = (
     "/content/drive/MyDrive/Project/sketch2img/model/init_s2i_celeba"
 )
