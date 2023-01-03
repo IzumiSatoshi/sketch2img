@@ -1,9 +1,8 @@
 import sys
 import random
 
-sys.path.append("./src")  # running on /sketch2img
-from datasets_sketch2img import CelebaDataset
-from trainer_ddpm_sketch2img import Trainer
+from src.datasets_sketch2img import CelebaDataset
+from src.trainer_ddpm_sketch2img import Trainer
 
 project_name = "sketch2img_celeba_ddpm"
 run_name = "1epoch" + "_" + str(random.randint(0, 1000))

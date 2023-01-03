@@ -6,11 +6,7 @@ import numpy as np
 import cv2
 import random
 
-# mine
-import sys
-
-sys.path.append("src")
-from pipeline_ddpm_sketch2img import DDPMSketch2ImgPipeline
+from src.pipeline_ddpm_sketch2img import DDPMSketch2ImgPipeline
 
 fig, axs = plt.subplots(2, 3)
 

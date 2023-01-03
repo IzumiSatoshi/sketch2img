@@ -1,14 +1,11 @@
 import numpy as np
 import torch
 import sys
-
-sys.path.append("src")
-
-from datasets_sketch2img import FashionMNISTDataset
-from trainer_ddpm_sketch2img import Trainer
-
 import random
 import shutil
+
+from src.datasets_sketch2img import FashionMNISTDataset
+from src.trainer_ddpm_sketch2img import Trainer
 
 
 project_name = "test"

@@ -1,9 +1,8 @@
 import sys
 import random
 
-sys.path.append("./src")  # couldn't import in local without this
-from datasets_sketch2img import FashionMNISTDataset
-from trainer_ddpm_sketch2img import Trainer
+from src.datasets_sketch2img import FashionMNISTDataset
+from src.trainer_ddpm_sketch2img import Trainer
 
 project_name = "ddpm_train_test"
 run_name = "s2i_fmnist_30epoch_lr_-1" + "_" + str(random.randint(0, 1000))

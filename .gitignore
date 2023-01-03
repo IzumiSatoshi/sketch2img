@@ -3,3 +3,4 @@ model/
 flagged/
 __pycache__/
 wandb/
+.venv/
