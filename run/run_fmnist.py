@@ -17,6 +17,7 @@ num_epochs = 30
 batch_size = 128
 grad_accumulation_steps = 1
 lr = 1e-3
+save_pipe_steps = image_log_steps
 
 dataset = FashionMNISTDataset(data_dir)
 trainer = Trainer(
@@ -31,6 +32,7 @@ trainer = Trainer(
     project_name=project_name,
     run_name=run_name,
     image_log_steps=image_log_steps,
+    save_pipe_steps=image_log_steps,
 )
 
 trainer.train()

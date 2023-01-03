@@ -23,6 +23,7 @@ num_epochs = 2
 batch_size = 2
 grad_accumulation_steps = 1
 lr = 1e-3
+save_pipe_steps = image_log_steps
 
 seed = 0
 random.seed(seed)
@@ -42,6 +43,7 @@ trainer = Trainer(
     project_name=project_name,
     run_name=run_name,
     image_log_steps=image_log_steps,
+    save_pipe_steps=save_pipe_steps,
 )
 
 trainer.train()

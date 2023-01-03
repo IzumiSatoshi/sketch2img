@@ -11,14 +11,15 @@ data_dir = "/content/download/celeba_hq_256"
 pretrained_model_path = (
     "/content/drive/MyDrive/Project/sketch2img/model/init_s2i_celeba"
 )
-save_path = "/content/drive/MyDrive/Project/sketch2img/model/" + run_name
+save_path = "/content/drive/MyDrive/Project/sketch2img/model/celeba_" + run_name
 
 train_dataset_rate = 1
 image_log_steps = 500
 num_epochs = 1
-batch_size = 6
+batch_size = 5
 grad_accumulation_steps = 1
-lr = 1e-3
+lr = 1e-4
+save_pipe_steps = image_log_steps
 
 dataset = CelebaDataset(data_dir)
 trainer = Trainer(
@@ -33,6 +34,7 @@ trainer = Trainer(
     project_name=project_name,
     run_name=run_name,
     image_log_steps=image_log_steps,
+    save_pipe_steps=save_pipe_steps,
 )
 
 trainer.train()

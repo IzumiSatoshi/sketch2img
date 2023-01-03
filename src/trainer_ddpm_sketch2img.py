@@ -23,6 +23,7 @@ class Trainer:
         project_name,
         run_name,
         image_log_steps,
+        save_pipe_steps,
         device="cuda",
     ):
         self.save_path = save_path
@@ -32,6 +33,7 @@ class Trainer:
         self.grad_accumulation_steps = grad_accumulation_steps
         self.train_dataset_rate = train_dataset_rate
         self.image_log_steps = image_log_steps
+        self.save_pipe_steps = save_pipe_steps
         self.device = device
         self.global_step = 0
 
@@ -171,5 +173,6 @@ class Trainer:
                     step=self.global_step,
                 )
 
-            # save every epoch
-            self.pipe.save_pretrained(self.save_path)
+                # save pipe
+                if self.global_step % self.save_pipe_steps == 0:
+                    self.pipe.save_pretrained(self.save_path)
